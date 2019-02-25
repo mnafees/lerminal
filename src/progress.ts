@@ -1,17 +1,18 @@
-// NodeJS
-import * as os from 'os';
+// Lerminal
+import {LerminalConfig} from './config'
 
-export class Progress {
-  /*************
-   * Variables *
-   *************/
-  private file = `${os.homedir()}/.config/lerminal.json`
+export namespace Progress {
 
-  /***********
-   * Methods *
-   ***********/
+  export function startRecording() {
 
-  constructor(file?: string) {
-    if (file) this.file = file
   }
+
+  function loadProgress() {
+    
+  }
+
+  export function saveProgress() : boolean {
+    return true;
+  }
+
 }
