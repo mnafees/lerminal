@@ -10,6 +10,9 @@ import * as chalk from 'chalk'
 
 // Lerminal
 import {Progress} from './progress'
+import { LearminalCommand } from './learminalCommand';
+import { LearminalHelper } from './helper'
+import { LearminalLs } from './commands/ls';
 
 class Lerminal extends Command {
 
@@ -21,14 +24,7 @@ class Lerminal extends Command {
     'progress-file': flags.string({description: 'Progress file to use to use for the session'}),
   };
 
-  private username : string = os.userInfo().username;
-  private hostname : string = os.hostname();
-  private pwd : string = process.cwd();
-
-  private getPrompt() : string {
-    return chalk.default`{green.bold ${this.username}@${this.hostname}}:{blue.bold ${this.pwd}}$`;
-  }
-
+  private helperInstance : LearminalHelper = LearminalHelper.getInstance()
   async run() {
     const {flags} = await this.parse(Lerminal);
     Progress.startRecording();
@@ -40,6 +36,7 @@ class Lerminal extends Command {
 
     this.log(chalk.default`{magenta You are running Lerminal v${this.config.version} on ${this.config.platform}-${this.config.arch}}\n`);
     this.log('Welcome to Lerminal! Lerminal will help you learn how to use the terminal by emulating the behavior of an actual terminal.\n');
+    this.log(flags.step ? 'You have chosen to run with step mode enabled.\n' : 'You have chosen to run with step mode disabled.\n')
 
     // Terminal confirmation prompts
     this.log(chalk.default`{inverse 1. Terminal confirmation prompts}\n`);
@@ -57,35 +54,18 @@ class Lerminal extends Command {
     this.log(chalk.default`{inverse 2. The terminal}\n`);
     this.log('What you see below is called a terminal prompt.');
 
-    this.log(this.getPrompt());
-    this.log(chalk.default`- {green.bold ${this.username}} is your current username`);
-    this.log(chalk.default`- {green.bold ${this.hostname}} is your current hostname (or computer's name)`);
-    this.log(chalk.default`- {blue.bold ${this.pwd}} is your current working directory\n`);
+    this.log(this.helperInstance.getPrompt());
+    this.log(chalk.default`- {green.bold ${this.helperInstance.getUsername()}} is your current username`);
+    this.log(chalk.default`- {green.bold ${this.helperInstance.getHostname()}} is your current hostname (or computer's name)`);
+    this.log(chalk.default`- {blue.bold ${this.helperInstance.getPwd()}} is your current working directory\n`);
 
     // Your very first terminal command
-    this.log(chalk.default`{inverse 3. Your very first terminal command}\n`);
-    this.log(chalk.default`The very first command that we will use is {yellow.bold ls}. It is used to list the contents of the current working directory.`);
-    await inquirer.prompt([
-      {
-        name: 'ls-cmd',
-        prefix: this.getPrompt(),
-        message: 'Type ls and press [ENTER]',
-        validate: (input: string) => {
-          if (input !== 'ls') return 'Please type ls to proceed'
-          return true
-        }
-      }
-    ]);
-    this.log(execSync('ls').toString());
-    this.log(chalk.default`{yellow.bold Congratulations!} You just typed and executed your very first terminal command!\n`);
+    var lsInstance : LearminalLs = new LearminalLs(flags.step)
+    await lsInstance.run()
 
-    // More commonly used commands
-    this.log(chalk.default`{inverse 4. More commonly used commands}\n`);
-    // const cmdChoice = await inquirer.prompt([
-    //   {
-    //     name:
-    //   }
-    // ])
+    //Next command class
+    this.log('next command class will go here')
+
   }
 
 }
