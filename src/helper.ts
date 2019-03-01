@@ -1,31 +1,38 @@
-import * as os from 'os'
-import * as chalk from 'chalk'
-import * as process from 'process'
+// NodeJS
+import * as os from 'os';
+import * as process from 'process';
 
-export class LearminalHelper{
-    private static instance : LearminalHelper;
-    private username : string = os.userInfo().username;
-    private hostname : string = os.hostname();
-    private pwd : string = process.cwd();
+// Libs
+import * as chalk from 'chalk';
 
-    static getInstance() : LearminalHelper {
-        if (!LearminalHelper.instance) {
-            LearminalHelper.instance = new LearminalHelper();
+export class LerminalHelper {
+    
+    private static s_instance : LerminalHelper;
+    private _username : string = os.userInfo().username;
+    private _hostname : string = os.hostname();
+
+    static get instance() : LerminalHelper {
+        if (!LerminalHelper.s_instance) {
+            LerminalHelper.s_instance = new LerminalHelper();
         }
     
-        return LearminalHelper.instance;
-      }
-    public getPrompt() : string {
+        return LerminalHelper.s_instance; 
+    }
+
+    get prompt() : string {
         return chalk.default`{green.bold ${this.username}@${this.hostname}}:{blue.bold ${this.pwd}}$`;
-      }
-    public getUsername() : string {
-        return this.username
     }
-    public getHostname() : string {
-        return this.hostname
+
+    get username() : string {
+        return this._username;
     }
-    public getPwd() : string {
-        return this.pwd
+
+    get hostname() : string {
+        return this._hostname;
+    }
+
+    get pwd() : string {
+        return process.cwd();
     }
     
 }
