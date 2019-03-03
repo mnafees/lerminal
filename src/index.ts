@@ -1,18 +1,12 @@
-// NodeJS
-import * as os from 'os'
-import * as process from 'process'
-import {execSync} from 'child_process'
-
 // Libs
-import {Command, flags} from '@oclif/command'
-import * as inquirer from 'inquirer'
-import * as chalk from 'chalk'
+import { Command, flags } from '@oclif/command';
+import * as inquirer from 'inquirer';
+import * as chalk from 'chalk';
 
 // Lerminal
-import {Progress} from './progress'
-import { LearminalCommand } from './learminalCommand';
-import { LearminalHelper } from './helper'
-import { LearminalLs } from './commands/ls';
+import { Progress } from './progress';
+import { LerminalHelper } from './helper';
+import { LerminalLs } from './commands/ls';
 
 class Lerminal extends Command {
 
@@ -24,7 +18,8 @@ class Lerminal extends Command {
     'progress-file': flags.string({description: 'Progress file to use to use for the session'}),
   };
 
-  private helperInstance : LearminalHelper = LearminalHelper.getInstance()
+  private helper : LerminalHelper = LerminalHelper.instance;
+
   async run() {
     const {flags} = await this.parse(Lerminal);
     Progress.startRecording();
@@ -54,18 +49,17 @@ class Lerminal extends Command {
     this.log(chalk.default`{inverse 2. The terminal}\n`);
     this.log('What you see below is called a terminal prompt.');
 
-    this.log(this.helperInstance.getPrompt());
-    this.log(chalk.default`- {green.bold ${this.helperInstance.getUsername()}} is your current username`);
-    this.log(chalk.default`- {green.bold ${this.helperInstance.getHostname()}} is your current hostname (or computer's name)`);
-    this.log(chalk.default`- {blue.bold ${this.helperInstance.getPwd()}} is your current working directory\n`);
+    this.log(this.helper.prompt);
+    this.log(chalk.default`- {green.bold ${this.helper.username}} is your current username`);
+    this.log(chalk.default`- {green.bold ${this.helper.hostname}} is your current hostname (or computer's name)`);
+    this.log(chalk.default`- {blue.bold ${this.helper.pwd}} is your current working directory`);
 
     // Your very first terminal command
-    var lsInstance : LearminalLs = new LearminalLs(flags.step)
-    await lsInstance.run()
+    const ls : LerminalLs = new LerminalLs(flags.step);
+    await ls.run();
 
     //Next command class
-    this.log('next command class will go here')
-
+    this.log('next command class will go here');
   }
 
 }
