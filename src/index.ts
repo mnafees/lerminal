@@ -6,7 +6,7 @@ import * as chalk from 'chalk';
 // Lerminal
 import { Progress } from './progress';
 import { LerminalHelper } from './helper';
-import { LerminalLs } from './commands/ls';
+import * as Loader from './commandLoader';
 
 class Lerminal extends Command {
 
@@ -54,12 +54,13 @@ class Lerminal extends Command {
     this.log(chalk.default`- {green.bold ${this.helper.hostname}} is your current hostname (or computer's name)`);
     this.log(chalk.default`- {blue.bold ${this.helper.pwd}} is your current working directory`);
 
-    // Your very first terminal command
-    const ls : LerminalLs = new LerminalLs(flags.step);
-    await ls.run();
+    // // Your very first terminal command
+    // const ls : LerminalLs = new LerminalLs(flags.step);
+    // await ls.run();
 
-    //Next command class
-    this.log('next command class will go here');
+    // // Next command class
+    // this.log('next command class will go here');
+    Loader.loadCommands(flags.step);
   }
 
 }
