@@ -7,6 +7,7 @@ import * as chalk from 'chalk';
 import { Progress } from './progress';
 import { LerminalHelper } from './helper';
 import { LerminalLs } from './commands/ls';
+import * as Loader from './commandLoader';
 
 class Lerminal extends Command {
 
@@ -58,8 +59,9 @@ class Lerminal extends Command {
     const ls : LerminalLs = new LerminalLs(flags.step);
     await ls.run();
 
-    //Next command class
-    this.log('next command class will go here');
+    // More commands!
+    this.log(chalk.default`{inverse 4. More terminal commands!}\n`);
+    Loader.loadCommands(flags.step);
   }
 
 }
