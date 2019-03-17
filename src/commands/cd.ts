@@ -4,7 +4,7 @@ import * as inquirer from 'inquirer'
 
 // Lerminal
 import {LerminalFileSystem} from '../filesystem'
-import {LerminalCommand} from '../lerminalCommand'
+import {LerminalCommand} from '../lerminal-command'
 
 export class LerminalCd extends LerminalCommand {
   constructor(step: boolean, logFn: (message?: string, ...args: any[]) => void) {
@@ -18,7 +18,7 @@ export class LerminalCd extends LerminalCommand {
       {
         name: 'cd',
         prefix: this.helper.prompt,
-        message: 'Type cd dir01 and press [ENTER]',
+        message: chalk.default`Type {cyan cd dir01} and press [ENTER]`,
         validate: (input: string) => {
           if (input !== 'cd dir01') return 'Please type cd dir01 to proceed'
           return true
@@ -26,6 +26,21 @@ export class LerminalCd extends LerminalCommand {
       }
     ])
     LerminalFileSystem.instance.cd('dir01')
-    this.log(this.helper.pwd)
+    this.log(this.helper.prompt)
+    this.log('\nNow that you have successfully changed a directory, we will learn how to go a level up, that is, back to the directory we were in previously.')
+    await inquirer.prompt([
+      {
+        name: 'cd',
+        prefix: this.helper.prompt,
+        message: chalk.default`Type {cyan cd ..} and press [ENTER]`,
+        validate: (input: string) => {
+          if (input !== 'cd ..') return 'Please type cd dir01 to proceed'
+          return true
+        }
+      }
+    ])
+    LerminalFileSystem.instance.cd('..')
+    this.log(this.helper.prompt)
+    this.log(chalk.default`{yellow.bold Good job!}\n`)
   }
 }

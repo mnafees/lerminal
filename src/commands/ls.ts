@@ -4,7 +4,7 @@ import * as inquirer from 'inquirer'
 
 // Lerminal
 import {FileType, LerminalFileSystem} from '../filesystem'
-import {LerminalCommand} from '../lerminalCommand'
+import {LerminalCommand} from '../lerminal-command'
 
 export class LerminalLs extends LerminalCommand {
   constructor(step: boolean, logFn: (message?: string, ...args: any[]) => void) {

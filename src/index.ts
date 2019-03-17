@@ -4,8 +4,9 @@ import * as chalk from 'chalk'
 import * as inquirer from 'inquirer'
 
 // Lerminal
-import * as Loader from './commandLoader'
+import * as Runner from './runner'
 import {LerminalLs} from './commands/ls'
+import {LerminalFileSystem} from './filesystem'
 import {LerminalHelper} from './helper'
 import {Progress} from './progress'
 
@@ -20,9 +21,12 @@ class Lerminal extends Command {
 
   private readonly _helper: LerminalHelper = LerminalHelper.instance
 
+  async init() {
+    Progress.startRecording()
+  }
+
   async run() {
     const {flags} = await this.parse(Lerminal)
-    Progress.startRecording()
 
     this.log('     _                  _           _ ')
     this.log('    | |   ___ _ _ _ __ (_)_ _  __ _| |')
@@ -31,7 +35,7 @@ class Lerminal extends Command {
 
     this.log(chalk.default`{magenta You are running Lerminal v${this.config.version} on ${this.config.platform}-${this.config.arch}}\n`)
     this.log('Welcome to Lerminal! Lerminal will help you learn how to use the terminal by emulating the behavior of an actual terminal.\n')
-    this.log(flags.step ? 'You have chosen to run with step mode enabled.\n' : 'You have chosen to run with step mode disabled.\n')
+    this.log(`You have chosen to run with step mode ${flags.step ? 'enabled' : 'disabled'}.\n`)
 
     // Terminal confirmation prompts
     this.log(chalk.default`{inverse 1. Terminal confirmation prompts}\n`)
@@ -60,7 +64,11 @@ class Lerminal extends Command {
 
     // More commands!
     this.log(chalk.default`{inverse 4. More terminal commands!}\n`)
-    Loader.loadCommands(flags.step, this.log)
+    await Runner.runCommands(flags.step, this.log)
+  }
+
+  async finally() {
+    LerminalFileSystem.instance.cleanup()
   }
 }
 

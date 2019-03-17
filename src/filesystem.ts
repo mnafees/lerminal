@@ -120,7 +120,7 @@ export class LerminalFileSystem {
   }
 
   cleanup() {
-
+    this.deleteDirRecursive(this.tmpDir)
   }
 
   pwd(): string {
@@ -131,6 +131,20 @@ export class LerminalFileSystem {
     // Generate some random directories
     for (let dir of ['dir01', 'anotherdir', 'dir with spaces']) {
       this.mkdir(dir)
+    }
+  }
+
+  private deleteDirRecursive(dirPath: string) {
+    if (fs.existsSync(dirPath)) {
+      fs.readdirSync(dirPath).forEach(file => {
+        const curPath = path.join(dirPath, file)
+        if (fs.statSync(curPath).isDirectory()) { // recurse
+          this.deleteDirRecursive(curPath)
+        } else { // delete file
+          fs.unlinkSync(curPath)
+        }
+      })
+      fs.rmdirSync(dirPath)
     }
   }
 }
