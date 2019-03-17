@@ -12,7 +12,7 @@ export namespace Progress {
   }
 
   export function saveProgress() : boolean {
-    return true;
+    return true
   }
 
 }

@@ -1,38 +1,37 @@
-// NodeJS
-import * as os from 'os';
-import * as process from 'process';
-
 // Libs
-import * as chalk from 'chalk';
+import * as chalk from 'chalk'
+import * as os from 'os'
+
+import {LerminalFileSystem} from './filesystem'
 
 export class LerminalHelper {
-    
-    private static s_instance : LerminalHelper;
-    private _username : string = os.userInfo().username;
-    private _hostname : string = os.hostname();
-
-    static get instance() : LerminalHelper {
-        if (!LerminalHelper.s_instance) {
-            LerminalHelper.s_instance = new LerminalHelper();
-        }
-    
-        return LerminalHelper.s_instance; 
+  static get instance(): LerminalHelper {
+    if (!LerminalHelper.s_instance) {
+      LerminalHelper.s_instance = new LerminalHelper()
     }
 
-    get prompt() : string {
-        return chalk.default`{green.bold ${this.username}@${this.hostname}}:{blue.bold ${this.pwd}}$`;
-    }
+    return LerminalHelper.s_instance
+  }
 
-    get username() : string {
-        return this._username;
-    }
+  private static s_instance: LerminalHelper
 
-    get hostname() : string {
-        return this._hostname;
-    }
+  private readonly _username: string = os.userInfo().username
+  private readonly _hostname: string = os.hostname()
 
-    get pwd() : string {
-        return process.cwd();
-    }
-    
+  get prompt(): string {
+    return chalk.default`{green.bold ${this.username}@${this.hostname}}:{blue.bold ${this.pwd}}$`
+  }
+
+  get username(): string {
+    return this._username
+  }
+
+  get hostname(): string {
+    return this._hostname
+  }
+
+  get pwd(): string {
+    return `/lerminal${LerminalFileSystem.instance.pwd()
+      .substr(LerminalFileSystem.instance.tmpDir.length)}`
+  }
 }
