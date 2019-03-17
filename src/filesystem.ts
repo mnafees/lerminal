@@ -16,13 +16,6 @@ export enum FileType {
 }
 
 export class LerminalFileSystem {
-  private static s_instance: LerminalFileSystem
-
-  readonly tmpDir: string
-  private readonly _dirs: Array<string> = []
-  private readonly _files: Array<string> = []
-  private _pwd: string
-
   static get instance(): LerminalFileSystem {
     if (!LerminalFileSystem.s_instance) {
       LerminalFileSystem.s_instance = new LerminalFileSystem()
@@ -30,6 +23,14 @@ export class LerminalFileSystem {
 
     return LerminalFileSystem.s_instance
   }
+
+  private static s_instance: LerminalFileSystem
+
+  readonly tmpDir: string
+
+  private readonly _dirs: Array<string> = []
+  private readonly _files: Array<string> = []
+  private _pwd: string
 
   private constructor() {
     this.tmpDir = fs.mkdtempSync(`${os.tmpdir}${path.sep}lerminal_tmp_`)
@@ -68,32 +69,54 @@ export class LerminalFileSystem {
     }
 
     const dirPath = path.join(this._pwd, name)
-    if (fs.existsSync(dirPath)) {
+    if (!dirPath.startsWith(this.tmpDir)) {
+      return LFSCode.BAD_INPUT
+    } else if (fs.existsSync(dirPath)) {
       return LFSCode.EXISTS
     }
     fs.mkdirSync(dirPath)
-    this._dirs.push()
+    this._dirs.push(dirPath.substr(this.tmpDir.length))
     return LFSCode.SUCCESSFUL
   }
 
   touch(name: string): LFSCode {
-    const filePath = `${this.tmpDir}${path.sep}${name}`
-    if (fs.existsSync(filePath)) {
+    if (name.includes('/') || name.indexOf('.') === 0) {
+      return LFSCode.BAD_INPUT
+    }
+
+    const filePath = path.join(this._pwd, name)
+    if (!filePath.startsWith(this.tmpDir)) {
+      return LFSCode.BAD_INPUT
+    } else if (fs.existsSync(filePath)) {
       return LFSCode.EXISTS
     }
-    fs.mkdirSync(`${this.tmpDir}${path.sep}${name}`)
-    this._dirs.push(name)
+    fs.writeFileSync(filePath, '')
+    this._files.push(filePath.substr(this.tmpDir.length))
     return LFSCode.SUCCESSFUL
   }
 
   rmdir(name: string) {
-    fs.rmdirSync(`${this.tmpDir}${path.sep}${name}`)
-    const dirIdx = this._dirs.indexOf(name)
-    this._dirs
+    const dirPath = path.join(this._pwd, name)
+    if (!dirPath.startsWith(this.tmpDir)) {
+      return LFSCode.BAD_INPUT
+    } else if (!fs.existsSync(dirPath)) {
+      return LFSCode.NO_EXISTS
+    }
+    fs.rmdirSync(dirPath)
+    const dirIdx = this._dirs.indexOf(dirPath.substr(this.tmpDir.length))
+    this._dirs.slice(dirIdx, 1)
   }
 
-  rm() {
-
+  rm(name: string) {
+    const filePath = path.join(this._pwd, name)
+    if (!filePath.startsWith(this.tmpDir)) {
+      return LFSCode.BAD_INPUT
+    } else if (!fs.existsSync(filePath)) {
+      return LFSCode.NO_EXISTS
+    }
+    fs.unlinkSync(filePath)
+    const fileIdx = this._files.indexOf(filePath.substr(this.tmpDir.length))
+    this._files.slice(fileIdx, 1)
   }
 
   cleanup() {
