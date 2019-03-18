@@ -1,27 +1,28 @@
 // NodeJS
-import * as process from 'process';
+import * as process from 'process'
 
 // Libs
-import * as inquirer from 'inquirer';
+import * as inquirer from 'inquirer'
 
 // Lerminal
-import { LerminalHelper } from './helper';
+import {LerminalHelper} from './helper'
 
 export abstract class LerminalCommand {
+  helper: LerminalHelper = LerminalHelper.instance
+  log: (message?: string, ...args: any[]) => void
 
-  helper : LerminalHelper = LerminalHelper.instance;
+  private readonly _step: boolean
 
-  private _step : boolean;
-  
   // By default we have continue to next since if step is not enabled, we want to continue
-  constructor(step: boolean = false) {
-    this._step = step;
+  constructor(step = false, logFn: (message?: string, ...args: any[]) => void) {
+    this._step = step
+    this.log = logFn
   }
 
   // Check whether step is enabled. If step is disabled, it returns "continue" for continuing to next command.
   // If step is enabled, it asks user what they want to do: "continue", "repeat", "quit"
   async run() {
-    await this.execute();
+    await this.execute()
     if (this._step) {
       const choice = await inquirer.prompt([
         {
@@ -43,16 +44,15 @@ export abstract class LerminalCommand {
             }
           ]
         }
-      ]);
-      const userSelection = JSON.parse(JSON.stringify(choice)).step_mode;
+      ])
+      const userSelection = JSON.parse(JSON.stringify(choice)).step_mode
       if (userSelection === 'quit') {
-        process.exit(0);
+        process.exit(0)
       } else if (userSelection === 'repeat') {
-        await this.run();
+        await this.run()
       }
     }
   }
 
-  protected abstract async execute() : Promise<any>;
-
+  protected abstract async execute(): Promise<any>
 }
