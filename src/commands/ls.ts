@@ -25,17 +25,9 @@ export class LerminalLs extends LerminalCommand {
         }
       }
     ])
-    const dirContents = LerminalFileSystem.instance.ls()
-    // FIXME: Cleaner way to print dirs first and then files
+    const dirContents = this.helper.lsContents
     for (let f of dirContents) {
-      if (f[1] === FileType.DIR) {
-        this.log(chalk.default`{cyan.bold ${f[0]}}`)
-      }
-    }
-    for (let f of dirContents) {
-      if (f[1] === FileType.FILE) {
-        this.log(f[0])
-      }
+      this.log(f)
     }
     this.log(chalk.default`{yellow.bold Congratulations!} You just typed and executed your very first terminal command!\n`)
   }
