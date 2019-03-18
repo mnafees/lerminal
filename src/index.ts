@@ -4,11 +4,11 @@ import * as chalk from 'chalk'
 import * as inquirer from 'inquirer'
 
 // Lerminal
-import * as Runner from './runner'
 import {LerminalLs} from './commands/ls'
 import {LerminalFileSystem} from './filesystem'
 import {LerminalHelper} from './helper'
 import {Progress} from './progress'
+import * as Runner from './runner'
 
 class Lerminal extends Command {
   static description = 'Lerminal - Learn to use the Terminal'
