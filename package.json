@@ -44,10 +44,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "oclif": {
-    "bin": "lerminal",
-    "hooks": {
-      "init": "./lib/hooks/init/InitHook"
-    }
+    "bin": "lerminal"
   },
   "repository": "mnafees/lerminal",
   "scripts": {
