@@ -3,7 +3,7 @@ lerminal
 
 Learn how to use the terminal
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Gitter](https://img.shields.io/gitter/room/lerminal/community.svg)](https://gitter.im/lerminal/community)
 [![Version](https://img.shields.io/npm/v/lerminal.svg)](https://npmjs.org/package/lerminal)
 [![CircleCI](https://circleci.com/gh/mnafees/lerminal/tree/master.svg?style=shield)](https://circleci.com/gh/mnafees/lerminal/tree/master)
 [![Codecov](https://codecov.io/gh/mnafees/lerminal/branch/master/graph/badge.svg)](https://codecov.io/gh/mnafees/lerminal)
