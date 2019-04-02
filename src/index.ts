@@ -4,7 +4,7 @@ import * as chalk from 'chalk'
 import * as inquirer from 'inquirer'
 
 // Lerminal
-import {LerminalLs} from './commands/ls'
+import {LerminalLs} from './commands/00 - ls'
 import {LerminalFileSystem} from './filesystem'
 import {LerminalHelper} from './helper'
 import {Progress} from './progress'

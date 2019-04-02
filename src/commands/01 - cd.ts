@@ -26,7 +26,6 @@ export class LerminalCd extends LerminalCommand {
       }
     ])
     LerminalFileSystem.instance.cd('dir01')
-    this.log(this.helper.prompt)
     this.log('\nNow that you have successfully changed a directory, we will learn how to go a level up, that is, back to the directory we were previously in.')
     await inquirer.prompt([
       {
