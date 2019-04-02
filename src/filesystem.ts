@@ -50,6 +50,23 @@ export class LerminalFileSystem {
     return LFSCode.BAD_INPUT
   }
 
+  cp(sourceName: string, destinationName: string): LFSCode {
+    if (sourceName.includes('/') || sourceName.indexOf('.') === 0 || destinationName.includes('/') || destinationName.indexOf('.') === 0) {
+      return LFSCode.BAD_INPUT
+    }
+    const sourceFilePath = path.join(this._pwd, sourceName)
+    const destinationFilePath = path.join(this._pwd, destinationName)
+    if (!sourceFilePath.startsWith(this.tmpDir) || !destinationFilePath.startsWith(this.tmpDir)) {
+      return LFSCode.BAD_INPUT
+    } else if (fs.existsSync(destinationFilePath)) {
+      return LFSCode.EXISTS
+    } else if (!fs.existsSync(sourceFilePath)) {
+      return LFSCode.NO_EXISTS
+    }
+    fs.copyFileSync(sourceFilePath, destinationFilePath)
+    return LFSCode.SUCCESSFUL
+  }
+
   ls(): Array<[string, FileType]> {
     let contentsArr: Array<[string, FileType]> = []
     const dirContents = fs.readdirSync(this._pwd)

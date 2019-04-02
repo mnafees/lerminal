@@ -6,28 +6,27 @@ import * as inquirer from 'inquirer'
 import {LerminalFileSystem} from '../filesystem'
 import {LerminalCommand} from '../lerminal-command'
 
-export class LerminalTouch extends LerminalCommand {
+export class LerminalMkdir extends LerminalCommand {
   constructor(step: boolean, logFn: (message?: string, ...args: any[]) => void) {
     super(step, logFn)
   }
 
   async execute() {
-    this.log(chalk.default`\n{inverse The touch command}\n`)
-    this.log(chalk.default`The touch command is used to create a file with no contents. The command sets the modification and access time of files, and if the file doesn't exist, then it will create the file. `)
+    this.log(chalk.default`\n{inverse The mkdir command}\n`)
+    this.log(chalk.default`While the touch command can be used to create empty files, mkdir can be used to create a directory. `)
     await inquirer.prompt([
       {
-        name: 'touch',
+        name: 'mkdir',
         prefix: this.helper.prompt,
-        message: chalk.default`Type {cyan touch file1} and press [ENTER]`,
+        message: chalk.default`Type {cyan mkdir dir12} and press [ENTER]`,
         validate: (input: string) => {
-          if (input !== 'touch file1') return 'Please type touch file1 to proceed'
+          if (input !== 'mkdir dir12') return 'Please type mkdir dir12 to proceed'
           return true
         }
       }
     ])
-    LerminalFileSystem.instance.touch('file1')
-    this.log(this.helper.prompt)
-    this.log(chalk.default`\nNow that you have successfully created a file, type {cyan ls} to see the contents of the current directory again.`)
+    LerminalFileSystem.instance.mkdir('dir12')
+    this.log(chalk.default`\nNow that you have successfully created a directory, type {cyan ls} to see the contents of the current directory again.`)
     await inquirer.prompt([
       {
         name: 'ls',
@@ -44,6 +43,6 @@ export class LerminalTouch extends LerminalCommand {
       this.log(f)
     }
     this.log(this.helper.prompt)
-    this.log(chalk.default`{yellow.bold Notice that the file you just created file1 is now there? Good job!}\n`)
+    this.log(chalk.default`{yellow.bold Notice that the directory you just created dir12 is now there? Good job!}\n`)
   }
 }

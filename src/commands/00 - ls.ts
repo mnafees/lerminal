@@ -3,7 +3,6 @@ import * as chalk from 'chalk'
 import * as inquirer from 'inquirer'
 
 // Lerminal
-import {FileType, LerminalFileSystem} from '../filesystem'
 import {LerminalCommand} from '../lerminal-command'
 
 export class LerminalLs extends LerminalCommand {
